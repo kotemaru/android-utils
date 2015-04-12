@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+
+<project default="default" basedir=".">
+
+	<property name="build" value="${basedir}/build" />
+	<property name="apt.jar" value="${build}/DelegateHandler-apt.jar" />
+	<property name="rt.jar" value="${build}/DelegateHandler-rt.jar" />
+	<property name="source" value="${basedir}/src" />
+	<property name="classes" value="${build}/classes" />
+	<property name="rt.classes" value="${build}/rt.classes" />
+	<property name="lib" value="${basedir}/lib" />
+
+	<target name="default" depends="copy,jar"/>
+
+	<target name="clean">
+		<delete file="${apt.jar}" />
+		<delete file="${rt.jar}" />
+		<delete dir="${build}" />
+	</target>
+
+	<target name="jar">
+		<jar jarfile="${apt.jar}" manifest="MANIFEST.MF">
+			<fileset dir="${classes}">
+				<include name="**" />
+				<include name="META-INF/**" />
+			</fileset>
+		</jar>
+		<jar jarfile="${rt.jar}" manifest="MANIFEST.MF">
+			<fileset dir="${classes}">
+				<include name="**/annotation/*.class" />
+				<include name="**/rt/*.class" />
+				<include name="META-INF/**" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="copy">
+		<mkdir dir="${rt.classes}" />
+		<copy todir="${rt.classes}">
+			<fileset dir="${classes}">
+				<include name="**/annotation/*.class" />
+				<include name="**/rt/*.class" />
+			</fileset>
+		</copy>
+	</target>
+</project>
