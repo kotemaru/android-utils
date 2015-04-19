@@ -20,7 +20,7 @@ public class ImageUtil {
 
 	public static Bitmap loadBitmap(InputStream in, Point size) throws IOException {
 		try {
-			in.mark(1024*1024);
+			in.mark(1024 * 1024);
 			BitmapFactory.Options realSize = loadBitmapSize(in);
 			in.reset();
 			if (realSize == null) return null;
@@ -39,7 +39,32 @@ public class ImageUtil {
 			if (in != null) in.close();
 		}
 	}
-	
+
+	public static BitmapFactory.Options loadBitmapSize(byte[] buff, int offset, int length) throws IOException {
+		BitmapFactory.Options option = new BitmapFactory.Options();
+		option.inJustDecodeBounds = true;
+		BitmapFactory.decodeByteArray(buff, offset, length, option);
+		return option;
+	}
+
+	public static Bitmap loadBitmap(byte[] buff, int offset, int length, Point size) throws IOException {
+		try {
+			BitmapFactory.Options realSize = loadBitmapSize(buff, offset, length);
+			if (realSize == null) return null;
+			int scaleW = realSize.outWidth / size.x + 1;
+			int scaleH = realSize.outHeight / size.y + 1;
+			int scale = Math.max(scaleW, scaleH);
+
+			BitmapFactory.Options option = new BitmapFactory.Options();
+			option.inSampleSize = scale;
+			Bitmap bitmap = BitmapFactory.decodeByteArray(buff, offset, length, option);
+			return bitmap;
+		} catch (IOException e) {
+			Log.e(TAG, "loadBitmap:" + e, e);
+			throw e;
+		}
+	}
+
 	public static Bitmap scaleOutside(Bitmap srcBitmap, Point size) {
 		float dispAspect = (float) size.x / (float) size.y;
 		float imgAspect = (float) srcBitmap.getWidth() / (float) srcBitmap.getHeight();
@@ -61,22 +86,20 @@ public class ImageUtil {
 		cropBitmap.recycle();
 		return dstBitmap;
 	}
-	
+
 	public static Bitmap scaleInside(Bitmap srcBitmap, Point size) {
 		float dispAspect = (float) size.x / (float) size.y;
 		float imgAspect = (float) srcBitmap.getWidth() / (float) srcBitmap.getHeight();
 		int w, h;
 		if (dispAspect > imgAspect) {
-			w = (int)(size.y * imgAspect);
+			w = (int) (size.y * imgAspect);
 			h = size.y;
 		} else {
 			w = size.x;
-			h = (int)(size.x * imgAspect);
+			h = (int) (size.x * imgAspect);
 		}
 		Bitmap dstBitmap = Bitmap.createScaledBitmap(srcBitmap, w, h, true);
 		return dstBitmap;
 	}
 
-	
-	
 }

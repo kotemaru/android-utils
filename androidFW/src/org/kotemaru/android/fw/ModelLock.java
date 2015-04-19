@@ -120,4 +120,28 @@ public class ModelLock {
 			super(detailMessage);
 		}
 	}
+
+	public interface WriteLockRunner {
+		public void run();
+	}
+	public void doWirteLock(WriteLockRunner runner) {
+		writeLock();
+		try {
+			runner.run();
+		} finally {
+			writeUnlock();
+		}
+	}
+	public interface ReadLockRunner<T> {
+		public T run();
+	}
+	public <T> T doReadLock(ReadLockRunner<T> runner) {
+		readLock();
+		try {
+			return runner.run();
+		} finally {
+			readUnlock();
+		}
+	}
+
 }

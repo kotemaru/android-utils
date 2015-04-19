@@ -85,6 +85,9 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 	public void updateCurrentActivity() {
 		if (mCurrentActivity != null) mThreadManager.post(ThreadManager.UI, mUpdateRunner, 0);
 	}
+	public Activity getCurrentActivity() {
+		return mCurrentActivity.toActivity();
+	}
 
 	@SuppressWarnings("unchecked")
 	private V toGenericsActivity(Activity activity) {
@@ -95,8 +98,8 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 			throw e;
 		}
 	}
-	
-	
+
+
 	/**
 	 * @deprecated call System.exit().
 	 * @param waitTimeMs
@@ -111,7 +114,7 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 			}
 		}, waitTimeMs);
 	}
-	
+
 	@UiThreadOnly
 	public void shutdown(ShutdownMode mode) {
 		Log.i(TAG, "shutdown:"+mode);

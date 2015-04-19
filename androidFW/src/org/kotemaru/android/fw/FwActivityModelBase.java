@@ -1,9 +1,8 @@
-package org.kotemaru.android.sample.model;
+package org.kotemaru.android.fw;
 
-import org.kotemaru.android.fw.ModelLock;
 import org.kotemaru.android.fw.dialog.DialogModel;
 
-public class Sample1Model extends ModelLock {
+public class FwActivityModelBase extends ModelLock {
 	private DialogModel mDialogModel = new DialogModel();
 
 	public DialogModel getDialogModel() {
@@ -13,5 +12,4 @@ public class Sample1Model extends ModelLock {
 	public void setDialogModel(DialogModel dialogModel) {
 		mDialogModel = dialogModel;
 	}
-
 }

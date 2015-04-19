@@ -3,5 +3,5 @@
     <factorypathentry kind="WKSPJAR" id="/DelegateHandler/libs/commons-collections-3.2.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="WKSPJAR" id="/DelegateHandler/libs/commons-lang-2.4.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="WKSPJAR" id="/DelegateHandler/libs/velocity-1.7.jar" enabled="true" runInBatchMode="false"/>
-    <factorypathentry kind="WKSPJAR" id="/DelegateHandler/build/DelegateHandler-apt.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="WKSPJAR" id="/androidFW/tools/DelegateHandler-apt.jar" enabled="false" runInBatchMode="false"/>
 </factorypath>

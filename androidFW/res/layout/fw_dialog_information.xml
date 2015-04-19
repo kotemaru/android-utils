@@ -1,0 +1,25 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:textSize="16sp"
+        android:id="@+id/message"
+    	android:layout_margin="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="インフォメーションの内容"
+        >
+    </TextView>
+
+    <CheckBox
+        android:textSize="12sp"
+        android:id="@+id/cb_next_not_shown"
+        android:layout_marginTop="12sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="このダイアログを次回も表示する。" />
+
+</LinearLayout>
