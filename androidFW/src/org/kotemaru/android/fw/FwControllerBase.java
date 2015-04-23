@@ -9,7 +9,7 @@ public abstract class FwControllerBase<A extends Application> implements FwContr
 		mApplication = app;
 	}
 
-	public A getApplication() {
+	public A getFwApplication() {
 		return mApplication;
 	}
 }

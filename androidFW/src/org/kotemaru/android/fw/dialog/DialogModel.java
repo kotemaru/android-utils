@@ -5,6 +5,7 @@ import org.kotemaru.android.fw.ModelLock;
 import android.content.Context;
 
 public class DialogModel extends ModelLock {
+	private OnUpdateDialogModelListener mListener;
 	private DialogBuilder mDialogBuilder;
 
 	public DialogBuilder getDialogBuilder() {
@@ -20,6 +21,10 @@ public class DialogModel extends ModelLock {
 		} finally {
 			this.writeUnlock();
 		}
+		commit();
+	}
+	public void commit() {
+		if (mListener != null) mListener.onUpdateDialogModel(this);
 	}
 
 	public void clear() {
@@ -36,8 +41,10 @@ public class DialogModel extends ModelLock {
 		setDialogBuilderLocked(new ConfirmDialogBuilder(title, messgae,  listener));
 	}
 
-	public void setProgress(String messgae, boolean isCancelable, OnDialogCancelListener listener) {
-		setDialogBuilderLocked(new ProgressDialogBuilder(messgae, isCancelable, listener));
+	public ProgressDialogBuilder setProgress(String messgae, boolean isCancelable, OnDialogCancelListener listener) {
+		ProgressDialogBuilder builder = new ProgressDialogBuilder(this, messgae, isCancelable, listener);
+		setDialogBuilderLocked(builder);
+		return builder;
 	}
 	public boolean setInformationIfRequire(Context context, int resId) {
 		if (InformationDialogBuilder.isRequireShown(context, resId)) {
@@ -45,6 +52,13 @@ public class DialogModel extends ModelLock {
 			return true;
 		}
 		return false;
+	}
+
+	public OnUpdateDialogModelListener getOnUpdateDialogModelListener() {
+		return mListener;
+	}
+	public void setOnUpdateDialogModelListener(OnUpdateDialogModelListener onUpdateDialogModelListener) {
+		mListener = onUpdateDialogModelListener;
 	}
 
 }

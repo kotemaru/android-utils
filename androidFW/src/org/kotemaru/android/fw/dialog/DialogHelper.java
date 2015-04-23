@@ -1,30 +1,34 @@
 package org.kotemaru.android.fw.dialog;
 
+import org.kotemaru.android.fw.annotation.UiThreadOnly;
+
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 
 public class DialogHelper {
-	private Activity mActivity;
+	private DialogBuilder mCurrentBuilder;
 	private Dialog mCurrentDialog;
 
-	public DialogHelper(Activity activity) {
-		mActivity = activity;
+	public DialogHelper() {
 	}
-	public boolean doDialog(final DialogModel model) {
-		mCurrentDialog = clear(mCurrentDialog);
+
+	@UiThreadOnly
+	public boolean doDialog(final Activity activity, final DialogModel model) {
 		model.readLock();
 		try {
 			DialogBuilder builder = model.getDialogBuilder();
-			if (builder == null) return false;
-			mCurrentDialog = builder.create(mActivity);
-			mCurrentDialog.setOnDismissListener(new OnDismissListener(){
-				@Override
-				public void onDismiss(DialogInterface dialog) {
-					model.clear();
-				}
-			});
+			if (builder == null) {
+				clear(mCurrentDialog);
+				return false;
+			}
+			if (builder == mCurrentBuilder) {
+				mCurrentDialog = builder.update(activity, model, mCurrentDialog);
+				mCurrentDialog.show();
+				return true;
+			}
+			clear(mCurrentDialog);
+			mCurrentBuilder = builder;
+			mCurrentDialog = builder.create(activity, model);
 			mCurrentDialog.show();
 			return true;
 		} finally {

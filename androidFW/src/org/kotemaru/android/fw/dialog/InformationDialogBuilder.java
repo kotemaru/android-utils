@@ -59,7 +59,7 @@ public class InformationDialogBuilder implements DialogBuilder {
 
 	@SuppressLint("InflateParams")
 	@Override
-	public Dialog create(final Activity activity) {
+	public Dialog create(final Activity activity, final DialogModel model) {
 		LayoutInflater inflater = LayoutInflater.from(activity);
 		final View view = inflater.inflate(R.layout.fw_dialog_information, null);
 		TextView messageView = (TextView) view.findViewById(R.id.message);
@@ -81,6 +81,7 @@ public class InformationDialogBuilder implements DialogBuilder {
 				setRequireShown(activity, mKey, nextNotShownView.isChecked());
 				if (mListener != null) mListener.onDialogOkay(activity);
 				dialog.dismiss();
+				model.clear();
 			}
 		});
 		return builder.create();
@@ -115,5 +116,9 @@ public class InformationDialogBuilder implements DialogBuilder {
 			drawable.setBounds(0, 0, (int) (w * rate), (int) (h * rate));
 			return drawable;
 		}
+	}
+	@Override
+	public Dialog update(Activity activity, DialogModel model,Dialog dialog) {
+		return dialog;
 	}
 }

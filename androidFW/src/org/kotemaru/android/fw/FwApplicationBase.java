@@ -82,9 +82,11 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 		}
 	}
 
+	@Override
 	public void updateCurrentActivity() {
 		if (mCurrentActivity != null) mThreadManager.post(ThreadManager.UI, mUpdateRunner, 0);
 	}
+	@Override
 	public Activity getCurrentActivity() {
 		return mCurrentActivity.toActivity();
 	}

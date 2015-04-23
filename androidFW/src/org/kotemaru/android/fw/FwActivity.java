@@ -8,4 +8,5 @@ public interface FwActivity {
 	public void finish();
 	public boolean isFinishing();
 	public Activity toActivity();
+	public FwApplicationContext getFwApplication();
 }

@@ -17,7 +17,7 @@ public class AlertDialogBuilder implements DialogBuilder {
 	}
 
 	@Override
-	public Dialog create(final Activity activity) {
+	public Dialog create(final Activity activity, final DialogModel model) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity)
 				.setTitle(mTitle).setMessage(mMessage);
 		builder.setCancelable(false);
@@ -27,9 +27,15 @@ public class AlertDialogBuilder implements DialogBuilder {
 			public void onClick(DialogInterface dialog, int which) {
 				if (mListener != null) mListener.onDialogOkay(activity);
 				dialog.dismiss();
+				model.clear();
 			}
 		});
 		return builder.create();
+	}
+
+	@Override
+	public Dialog update(Activity activity, DialogModel model, Dialog dialog) {
+		return dialog;
 	}
 
 }
