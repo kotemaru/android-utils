@@ -10,7 +10,7 @@ import android.os.Bundle;
 public abstract class FwActivityBase<A extends FwApplicationBase<?, ?, ?>, M extends FwActivityModelBase>
 		extends Activity implements FwActivity
 {
-	private static final String TAG = FwActivityBase.class.getSimpleName();
+	public static final String TAG = FwActivityBase.class.getSimpleName();
 
 	private DialogHelper mDialogHelper = new DialogHelper();
 	private boolean mIsFiestStart = true;

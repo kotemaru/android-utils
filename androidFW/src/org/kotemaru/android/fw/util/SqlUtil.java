@@ -1,4 +1,4 @@
-package org.kotemaru.android.fw.util.sql;
+package org.kotemaru.android.fw.util;
 
 public class SqlUtil {
 	public interface Column {

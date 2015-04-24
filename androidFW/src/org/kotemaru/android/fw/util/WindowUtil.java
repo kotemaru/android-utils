@@ -13,7 +13,7 @@ import android.view.WindowManager;
  * @author kotemaru.org
  */
 public class WindowUtil {
-	private static final String TAG = WindowUtil.class.getSimpleName();
+	public static final String TAG = WindowUtil.class.getSimpleName();
 
 
 	/**

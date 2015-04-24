@@ -1,4 +1,4 @@
-package org.kotemaru.android.fw.util.image;
+package org.kotemaru.android.fw.util;
 
 import java.io.IOException;
 import java.io.InputStream;

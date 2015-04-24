@@ -2,8 +2,6 @@ package org.kotemaru.android.fw.dialog;
 
 import org.kotemaru.android.fw.ModelLock;
 
-import android.content.Context;
-
 public class DialogModel extends ModelLock {
 	private OnUpdateDialogModelListener mListener;
 	private DialogBuilder mDialogBuilder;
@@ -45,13 +43,6 @@ public class DialogModel extends ModelLock {
 		ProgressDialogBuilder builder = new ProgressDialogBuilder(this, messgae, isCancelable, listener);
 		setDialogBuilderLocked(builder);
 		return builder;
-	}
-	public boolean setInformationIfRequire(Context context, int resId) {
-		if (InformationDialogBuilder.isRequireShown(context, resId)) {
-			setDialogBuilderLocked(new InformationDialogBuilder(context, resId, null));
-			return true;
-		}
-		return false;
 	}
 
 	public OnUpdateDialogModelListener getOnUpdateDialogModelListener() {

@@ -1,6 +1,10 @@
-package org.kotemaru.android.fw.dialog;
+package org.kotemaru.android.fw.plugin.dialog;
 
-import org.kotemaru.android.fw.R;
+
+import org.kotemaru.android.fw.dialog.DialogBuilder;
+import org.kotemaru.android.fw.dialog.DialogModel;
+import org.kotemaru.android.fw.dialog.OnDialogOkayListener;
+import org.kotemaru.android.fw.plugin.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

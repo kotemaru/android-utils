@@ -2,7 +2,7 @@ package org.kotemaru.android.fw.plugin.widget;
 
 import org.kotemaru.android.fw.plugin.R;
 
-//import android.annotation.SuppressLint;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.DataSetObserver;
@@ -17,7 +17,7 @@ import android.widget.ListView;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-//@SuppressLint("ClickableViewAccessibility")
+@SuppressLint("ClickableViewAccessibility")
 public class IndexerBar extends LinearLayout {
 	private ListView mListView;
 	private SectionIndexer mSectionIndexer;
