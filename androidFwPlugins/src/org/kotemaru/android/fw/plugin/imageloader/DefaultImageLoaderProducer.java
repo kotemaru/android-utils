@@ -36,7 +36,8 @@ public class DefaultImageLoaderProducer implements ImageLoaderProducer {
 	protected int mImageViewTagKey = Integer.MAX_VALUE;
 	protected Point mImageSize = null;
 	protected boolean mIsImageSizeJustFit = false;
-	
+	protected boolean mIsNetworkEnabled = true;
+
 	public DefaultImageLoaderProducer(Context context) {
 		mContext = context;
 		mCacheSize = Runtime.getRuntime().maxMemory() / 10;
@@ -196,6 +197,15 @@ public class DefaultImageLoaderProducer implements ImageLoaderProducer {
 		mIsEscapeFileName = (baseUri == null);
 		return this;
 	}
+	public DefaultImageLoaderProducer setNetworkEnabled(boolean isNetworkEnabled) {
+		mIsNetworkEnabled = isNetworkEnabled;
+		return this;
+	}
+	@Override
+	public boolean isNetworkEnabled() {
+		return mIsNetworkEnabled;
+	}
+
 
 	// ---------------------------------------------------------------------------------------
 	private static final String INVALID_CHARS = "<>:*?\"/\\|#";
@@ -214,5 +224,6 @@ public class DefaultImageLoaderProducer implements ImageLoaderProducer {
 		}
 		return sbuf.toString();
 	}
+
 
 }

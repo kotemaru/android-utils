@@ -93,8 +93,11 @@ public class ImageLoader {
 		if (imageFile != null && imageFile.canRead()) {
 			Bitmap bitmap = loadBitmap(imageFile);
 			mHandler.onLoadImage(cinfo, bitmap);
-		} else if (mLruCache.changeState(cinfo, CacheState.NIL, CacheState.NOW_LODING)) {
+		} else if (mProducer.isNetworkEnabled()
+				&& mLruCache.changeState(cinfo, CacheState.NIL, CacheState.NOW_LODING)) {
 			mHandler.downloadImage(cinfo);
+		} else {
+			mHandler.onLoadImage(cinfo, null); // Image Not found
 		}
 	}
 

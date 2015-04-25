@@ -23,4 +23,5 @@ public interface ImageLoaderProducer {
 	public HttpUriRequest getHttpRequest(CharSequence imageId);
 	public void saveContent(HttpResponse response, File imageFile) throws IOException;
 	public Bitmap createBitmap(InputStream in);
+	public boolean isNetworkEnabled();
 }
