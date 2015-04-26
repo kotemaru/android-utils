@@ -1,4 +1,4 @@
-package org.kotemaru.android.delegatehandler.apt;
+package org.kotemaru.android.fw.apt;
 
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
@@ -6,11 +6,10 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 
 import org.apache.velocity.VelocityContext;
-import org.kotemaru.android.delegatehandler.annotation.GenerateDelegateHandler;
+import org.kotemaru.android.fw.annotation.GenerateDelegateHandler;
 
 @SupportedSourceVersion(SourceVersion.RELEASE_7)
-@SupportedAnnotationTypes("org.kotemaru.android.delegatehandler.annotation.GenerateDelegateHandler")
-// <-- Chenge it!!
+@SupportedAnnotationTypes("org.kotemaru.android.fw.annotation.GenerateDelegateHandler") // <-- Chenge it!!
 public class DelegateHandlerAp extends ApBase
 {
 	private static String OUTPUT_PACKAGE_PATH = ".";

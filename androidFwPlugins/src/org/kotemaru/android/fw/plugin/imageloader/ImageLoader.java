@@ -8,8 +8,8 @@ import java.io.InputStream;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.kotemaru.android.delegatehandler.annotation.GenerateDelegateHandler;
-import org.kotemaru.android.delegatehandler.annotation.Handle;
+import org.kotemaru.android.fw.annotation.GenerateDelegateHandler;
+import org.kotemaru.android.fw.annotation.Handle;
 import org.kotemaru.android.fw.plugin.imageloader.LruCache.CacheInfo;
 import org.kotemaru.android.fw.thread.ThreadManager;
 

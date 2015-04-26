@@ -1,4 +1,4 @@
-package org.kotemaru.android.delegatehandler.apt;
+package org.kotemaru.android.fw.apt;
 
 import java.util.Collection;
 
@@ -6,7 +6,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 
-import org.kotemaru.android.delegatehandler.annotation.Handle;
+import org.kotemaru.android.fw.annotation.Handle;
 import org.kotemaru.android.fw.thread.ThreadManager;
 
 public class MethodDecl {

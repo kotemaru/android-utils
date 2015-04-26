@@ -9,9 +9,10 @@ ${classDecl}        : ClassDeclインスタンス
 // This is generated code.
 package ${packageName};
 
-import org.kotemaru.android.delegatehandler.rt.DelegateRunner;
+import org.kotemaru.android.fw.thread.DelegateRunner;
 import org.kotemaru.android.fw.thread.ThreadManager;
-import org.kotemaru.android.delegatehandler.rt.DelegateHandlerError;
+import org.kotemaru.android.fw.thread.DelegateHandlerError;
+import org.kotemaru.android.fw.thread.OnDelegateHandlerErrorListener;
 import android.util.Log;
 
 public class ${className}  $classDecl.implements
@@ -23,10 +24,19 @@ public class ${className}  $classDecl.implements
 	private final ${typeElement.simpleName} mOrigin;
 	private final ThreadManager mThreadManager;
 	private boolean mIsDebug = false;
+	private OnDelegateHandlerErrorListener mOnErrorListener = new OnDelegateHandlerErrorListener() {
+		public void onDelegateHandlerError(Throwable t, String methodName, Object... arguments) {
+			Log.e(TAG, methodName+" in handler",t);
+			throw new DelegateHandlerError(t);
+		}
+	};
 
 	public ${className}(${typeElement.simpleName} origin, ThreadManager threadManager) {
 		this.mOrigin = origin;
 		this.mThreadManager = threadManager;
+		if (origin instanceof OnDelegateHandlerErrorListener) {
+			this.mOnErrorListener = (OnDelegateHandlerErrorListener) origin;
+		}
 	}
 	public void setDebugMode(boolean isDebug) {
 		mIsDebug = isDebug;
@@ -47,14 +57,10 @@ public class ${className}  $classDecl.implements
 						Log.e(TAG, "Retry : ${method.name} in handler:"+t);
 						mThreadManager.post($method.threadName, this, this.getInterval());
 					} else {
-#if( ! $method.isErrorHandler() )
-						onDelegateHandlerError(t, "${method.name}"  ${method.getArguments(true)});
-#end
+						mOnErrorListener.onDelegateHandlerError(t, "${method.name}"  ${method.getArguments(true)});
 					}
 #else
-#if( ! $method.isErrorHandler() )
-					onDelegateHandlerError(t, "${method.name}"  ${method.getArguments(true)});
-#end
+					mOnErrorListener.onDelegateHandlerError(t, "${method.name}"  ${method.getArguments(true)});
 #end
 				} finally {
 					mCurrentRunner.set(null);
@@ -72,10 +78,4 @@ public class ${className}  $classDecl.implements
 #end
 #end
 
-#if( ! $classDecl.hasErrorHandler() )
-	private void onDelegateHandlerError(Throwable t, String methodName, Object... arguments) {
-		Log.e(TAG, methodName+" in handler",t);
-		throw new DelegateHandlerError(t);
-	}
-#end
 }

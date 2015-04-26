@@ -1,4 +1,4 @@
-package org.kotemaru.android.delegatehandler.apt;
+package org.kotemaru.android.fw.apt;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -14,13 +14,12 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
 
-import org.kotemaru.android.delegatehandler.annotation.GenerateDelegateHandler;
-import org.kotemaru.android.delegatehandler.rt.OnDelegateHandlerErrorListener;
+import org.kotemaru.android.fw.annotation.GenerateDelegateHandler;
 
 public class ClassDecl extends AptUtil {
 	private TypeElement typeElem;
+	@SuppressWarnings("unused")
 	private ProcessingEnvironment env;
 
 	// private DelegateHandlerClass annotation;
@@ -40,15 +39,26 @@ public class ClassDecl extends AptUtil {
 		return resList;
 	}
 
+	/*
 	public boolean hasErrorHandler() {
+		return hasErrorHandler(typeElem);
+	}
+
+	public boolean hasErrorHandler(TypeElement subTypeElem) {
 		TypeElement listenerIfElem = env.getElementUtils().getTypeElement(
 				OnDelegateHandlerErrorListener.class.getCanonicalName());
-		List<? extends TypeMirror> types = typeElem.getInterfaces();
+		List<? extends TypeMirror> types = subTypeElem.getInterfaces();
 		for (TypeMirror type : types) {
 			if (env.getTypeUtils().isAssignable(type, listenerIfElem.asType())) return true;
 		}
+
+		TypeMirror superTypeMirror = subTypeElem.getSuperclass();
+		if (superTypeMirror instanceof DeclaredType) {
+			return hasErrorHandler((TypeElement)((DeclaredType)superTypeMirror).asElement());
+		}
 		return false;
 	}
+	*/
 
 	public Set<String> getMethodNameSet() {
 		Set<String> names = new HashSet<String>();

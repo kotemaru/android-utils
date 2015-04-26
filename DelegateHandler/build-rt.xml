@@ -3,7 +3,7 @@
 <project default="default" basedir=".">
 
 	<property name="build" value="${basedir}/build" />
-	<property name="apt.jar" value="${build}/DelegateHandler-apt.jar" />
+	<property name="apt.jar" value="${build}/androidfw-apt.jar" />
 	<property name="rt.jar" value="${build}/DelegateHandler-rt.jar" />
 	<property name="source" value="${basedir}/src" />
 	<property name="classes" value="${build}/classes" />

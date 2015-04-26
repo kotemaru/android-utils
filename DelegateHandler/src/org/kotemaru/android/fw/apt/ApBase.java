@@ -1,4 +1,4 @@
-package org.kotemaru.android.delegatehandler.apt;
+package org.kotemaru.android.fw.apt;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

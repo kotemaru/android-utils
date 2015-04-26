@@ -1,4 +1,4 @@
-package org.kotemaru.android.delegatehandler;
+package org.kotemaru.android.fw.apt;
 
 public class Version {
 	public static final String ID = "$Id: Version.java 3 2013-10-16 03:46:09Z kotemaru@kotemaru.org $";

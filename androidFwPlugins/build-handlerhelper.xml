@@ -33,6 +33,7 @@
 		<fileset dir="${lib}">
 			<include name="*.jar" />
 		</fileset>
+		<pathelement location="../androidFW/bin/androidfw.jar" />
 		<pathelement location="${source}" />
 		<pathelement location="${classes}" />
 	</path>
@@ -52,7 +53,7 @@
 			debug="on"
 			encoding="utf-8"
 			classpathref="target-path">
-			<compilerarg line="-processor org.kotemaru.android.delegatehandler.apt.DelegateHandlerAp"/>
+			<compilerarg line="-processor org.kotemaru.android.fw.apt.DelegateHandlerAp"/>
 			<!-- <compilerarg line="-proc:only" /> -->
 			<compilerarg line="-processorpath ${apt-cp}" />
 			<compilerarg line="-s ${target.apt_gen}" />

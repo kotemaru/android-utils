@@ -1,4 +1,4 @@
-package org.kotemaru.android.delegatehandler.annotation;
+package org.kotemaru.android.fw.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
