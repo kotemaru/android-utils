@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+	<property file="local.properties" />
+	<property file="project.properties" />
+
+	<target name="javadoc">
+		<javadoc access="protected"
+			encoding="UTF-8"
+			charset="UTF-8"
+			docencoding="UTF-8"
+			bootclasspath="${sdk.dir}/platforms/${target}/android.jar"
+			classpath="libs/android-support-v4.jar"
+			destdir="doc"
+			source="1.6"
+			sourcepath="src" >
+			<packageset dir="src" defaultexcludes="yes">
+				<include name="org/kotemaru/android/fw/**" />
+			</packageset>
+			<link offline="true" href="http://developer.android.com/reference"
+				packagelistLoc="${sdk.dir}/docs/reference"/>
+		</javadoc>
+	</target>
+</project>

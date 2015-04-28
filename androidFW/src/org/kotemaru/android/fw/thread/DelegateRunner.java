@@ -1,7 +1,11 @@
 package org.kotemaru.android.fw.thread;
 
-import org.kotemaru.android.fw.thread.ThreadManager;
 
+
+/**
+ * 移譲ハンドラ向けRunnable実装。
+ * <li>アプリは直接使わない。
+ */
 public abstract class DelegateRunner implements Runnable {
 	private int mRetryCount = 0;
 	private int mInterval = 0;

@@ -6,6 +6,11 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 
+/**
+ * プログレスダイアログ生成器。
+ * <li>タイトル無し、クルクル表示。
+ *
+ */
 public class ProgressDialogBuilder implements DialogBuilder {
 	private final DialogModel mDialogModel;
 	private String mMessage;

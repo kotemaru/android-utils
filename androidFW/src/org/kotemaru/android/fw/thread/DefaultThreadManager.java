@@ -6,6 +6,10 @@ import java.util.concurrent.RejectedExecutionException;
 
 import android.os.Looper;
 
+
+/**
+ * ThreadManagerの標準実装。
+ */
 public class DefaultThreadManager implements ThreadManager {
 
 	protected Executor mUiExecutor = new ExecutorHandler(Looper.getMainLooper());
@@ -20,7 +24,7 @@ public class DefaultThreadManager implements ThreadManager {
 		}
 		return sInstance;
 	}
-	
+
 	public DefaultThreadManager standardInitialize() {
 		registerThread(WORKER, 1, Thread.NORM_PRIORITY);
 		registerThread(NETWORK, 4, Thread.MIN_PRIORITY);
@@ -55,6 +59,13 @@ public class DefaultThreadManager implements ThreadManager {
 			throw new RejectedExecutionException("Unknown thread "+threadName);
 		}
 		return executor.post(runner, delay);
+	}
+
+	@Override
+	public void shutdown() {
+		for (Executor executor : mExecutorMap.values()) {
+			executor.shutdown();
+		}
 	}
 
 }

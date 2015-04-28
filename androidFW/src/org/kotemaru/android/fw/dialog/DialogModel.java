@@ -2,9 +2,19 @@ package org.kotemaru.android.fw.dialog;
 
 import org.kotemaru.android.fw.ModelLock;
 
+/**
+ * ダイアログを表すモデル。
+ */
 public class DialogModel extends ModelLock {
 	private OnUpdateDialogModelListener mListener;
 	private DialogBuilder mDialogBuilder;
+
+	public DialogModel(ModelLock parentLock) {
+		super(parentLock);
+	}
+	public DialogModel create(ModelLock parentLock) {
+		return new DialogModel(parentLock);
+	}
 
 	public DialogBuilder getDialogBuilder() {
 		return mDialogBuilder;
@@ -12,6 +22,12 @@ public class DialogModel extends ModelLock {
 	public void setDialogBuilder(DialogBuilder dialogBuilder) {
 		mDialogBuilder = dialogBuilder;
 	}
+
+
+	/**
+	 * ダイアログを登録する。
+	 * @param dialogBuilder ダイアログ生成器
+	 */
 	public void setDialogBuilderLocked(DialogBuilder dialogBuilder) {
 		this.writeLock();
 		try {
@@ -21,10 +37,16 @@ public class DialogModel extends ModelLock {
 		}
 		commit();
 	}
+	/**
+	 * ダイアログに変更が有ったことを通知する。
+	 */
 	public void commit() {
 		if (mListener != null) mListener.onUpdateDialogModel(this);
 	}
 
+	/**
+	 * ダイアログを削除する。
+	 */
 	public void clear() {
 		setDialogBuilderLocked(null);
 	}

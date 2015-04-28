@@ -1,8 +1,12 @@
-package org.kotemaru.android.fw;
+package org.kotemaru.android.fw.base;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.kotemaru.android.fw.FrameworkException;
+import org.kotemaru.android.fw.FwActivity;
+import org.kotemaru.android.fw.FwApplicationContext;
+import org.kotemaru.android.fw.FwController;
 import org.kotemaru.android.fw.annotation.UiThreadOnly;
 import org.kotemaru.android.fw.thread.ThreadManager;
 
@@ -15,6 +19,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+/**
+ * アプリケーションの基底クラス。
+ *
+ * @param <M> アプリケーションのModelの起点となるクラス。
+ * @param <V> アプリケーションの基底Activityクラス。
+ * @param <C> アプリケーションの起点となるControllerクラス。
+ */
 public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwController>
 		extends Application
 		implements FwApplicationContext
@@ -41,36 +52,105 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 
 	@Override
 	public void onCreate() {
+		Log.i(TAG, "onCreate:");
 		super.onCreate();
+		registerActivityLifecycleCallbacks(mActivityMonitor);
+	}
+
+	/**
+	 * 最初のActivityが生成された事の通知。
+	 * <li>実質的なアプリ（フォアグラウンド）の初期化処理。
+	 * <li>Overrideする場合、super.onWakeup() を最初に呼ぶ必要がある。
+	 *
+	 */
+	public void onWakeup() {
+		Log.i(TAG, "onWakeup:");
 		mThreadManager = createThreadManager();
 		mModel = createModel();
 		mController = createController();
-		registerActivityLifecycleCallbacks(mActivityMonitor);
 	}
+	/**
+	 * Activityがすべて終了した事の通知。
+	 * <li>※このメソッドが呼ばれる保証は無い。Activity.onDestroy()が呼ばれる保証が無いので。
+	 * <li>実質的なアプリ（フォアグラウンド）の終了処理。
+	 * <li>サービスは別であるので注意。
+	 * <li>Overrideする場合、super.onSleep() を最後に呼ぶ必要がある。
+	 * <li>Model,Controllerの開放に特別な処理が必要な場合ここで行う。
+	 */
+	public void onSleep() {
+		Log.i(TAG, "onSleep:");
+		if (mShutdownMode == ShutdownMode.FULL) {
+			shotdownServices();
+		} else {
+			mShutdownMode = ShutdownMode.NONE;
+		}
+		mThreadManager.shutdown();
+		mThreadManager = null;
+		mModel = null;
+		mController = null;
+		System.gc();
+	}
+	/**
+	 * アプリケーションのResume時に呼ばれる。
+	 * <li>フォラグラウンドのActivityが一つも無い状態からフォラグラウンドになった時呼ばれる。
+	 */
+	public void onResume() {
+		// abstract
+	}
+	/**
+	 * アプリケーションのPause時に呼ばれる。
+	 * <li>フォラグラウンドのActivityが一つも無くなった時呼ばれる。
+	 */
+	public void onPause() {
+		// abstract
+	}
+
+	/**
+	 * ThreadManagerインスタンスの生成。
+	 * <li>アプリケーションの必要とするスレッドの定義は完了した状態で返す。
+	 * @return ThreadManagerインスタンス
+	 */
 	public abstract ThreadManager createThreadManager();
+	/**
+	 * アプリケーションのModelインスタンスの生成。
+	 * @return 起点Modelインスタンス
+	 */
 	public abstract M createModel();
+	/**
+	 * アプリケーションのControllerインスタンスの生成。
+	 * @return 起点Controllerインスタンス
+	 */
 	public abstract C createController();
 
-	public void onApplicationResume() {
-		// abstract
-	}
-	public void onApplicationPause() {
-		// abstract
-	}
 
+	/**
+	 * スレッドマネージャを返す。
+	 */
 	public ThreadManager getThreadManager() {
 		return mThreadManager;
 	}
 
+	/**
+	 * @return 起点となるModelを返す。
+	 */
 	public M getModel() {
 		return mModel;
 	}
+	/**
+	 * @return 起点となるControllerを返す。
+	 */
 	public C getController() {
 		return mController;
 	}
 	public List<V> getActivityStack() {
 		return mActivityStack;
 	}
+
+	/**
+	 * 指定されたActivityまで戻る。
+	 * <li>当該Activityより上にスタックされているActivityはすべてfinish()する。
+	 * @param activityClass
+	 */
 	@UiThreadOnly
 	public void goBackActivity(Class<?> activityClass) {
 		for (int i = mActivityStack.size() - 1; i > 0; i--) {
@@ -82,10 +162,17 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 		}
 	}
 
+	/**
+	 * 現在表示中のActivityに画面更新を要求する。
+	 */
 	@Override
 	public void updateCurrentActivity() {
 		if (mCurrentActivity != null) mThreadManager.post(ThreadManager.UI, mUpdateRunner, 0);
 	}
+
+	/**
+	 * @return 現在表示中のActivityを返す。
+	 */
 	@Override
 	public Activity getCurrentActivity() {
 		return mCurrentActivity.toActivity();
@@ -101,10 +188,10 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 		}
 	}
 
-
 	/**
-	 * @deprecated call System.exit().
-	 * @param waitTimeMs
+	 * アプリの強制終了。
+	 * @deprecated  System.exit() を呼ぶので通常は使わない。
+	 * @param waitTimeMs 待ち時間
 	 */
 	@UiThreadOnly
 	public void shutdownAndKill(int waitTimeMs) {
@@ -117,22 +204,29 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 		}, waitTimeMs);
 	}
 
+	/**
+	 * アプリの終了処理。
+	 * <li>※タスクは終了しない。
+	 * <li>Activityをすべてfinish()する。
+	 * <li>ShutdownMode.FULLの場合すべてのサービスに stopService() を送信する。
+	 * <li>
+	 * @param mode ShutdownMode.NONE=Activityのみ。ShutdownMode.FULL=サービスも含む。
+	 */
 	@UiThreadOnly
 	public void shutdown(ShutdownMode mode) {
-		Log.i(TAG, "shutdown:"+mode);
+		Log.i(TAG, "shutdown:" + mode);
 		mShutdownMode = mode;
 		if (mode == ShutdownMode.NONE) return;
 		for (V activity : mActivityStack) {
 			if (!activity.isFinishing()) activity.finish();
 		}
 	}
-	private void onAllActivityDestroyed() {
-		if (mShutdownMode == ShutdownMode.FULL) {
-			shotdownServices();
-		} else {
-			mShutdownMode = ShutdownMode.NONE;
-		}
-	}
+
+	/**
+	 * このアプリのすべてのサービスに stopService() を送信する。
+	 * <li>stopService() でサービスが停止するかどうかはサービス次第。
+	 * <li>他のアプリからbindされていれば停止できないはず。
+	 */
 	private void shotdownServices() {
 		Log.i(TAG, "shotdownServices:");
 		try {
@@ -152,13 +246,20 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 		}
 	}
 
-
+	/**
+	 * Activityの状態を監視してアプリケーションのライフサイクルを作る。
+	 * <li>ライフサイクル：onWakeup()->onResume()->onPause()->onSleep()
+	 *
+	 */
 	ActivityLifecycleCallbacks mActivityMonitor = new ActivityLifecycleCallbacks() {
 		private int mForegroundCount = 0;
 
 		@Override
 		public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
 			Log.v(TAG, "onActivityCreated:" + activity.getClass().getCanonicalName());
+			if (mActivityStack.isEmpty()) {
+				onWakeup();
+			}
 			mActivityStack.add(toGenericsActivity(activity));
 		}
 		@Override
@@ -168,7 +269,7 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 			mActivityStack.add(mCurrentActivity);
 
 			if (mForegroundCount++ == 0) {
-				onApplicationResume();
+				onResume();
 			}
 		}
 		@Override
@@ -181,7 +282,7 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 			@Override
 			public void run() {
 				if (--mForegroundCount == 0) {
-					onApplicationPause();
+					onPause();
 				}
 			}
 		};
@@ -190,7 +291,9 @@ public abstract class FwApplicationBase<M, V extends FwActivity, C extends FwCon
 		public void onActivityDestroyed(Activity activity) {
 			Log.v(TAG, "onActivityDestroyed:" + activity.getClass().getCanonicalName());
 			mActivityStack.remove(activity);
-			if (mActivityStack.isEmpty()) onAllActivityDestroyed();
+			if (mActivityStack.isEmpty()) {
+				onSleep();
+			}
 		}
 
 		// @formatter:off

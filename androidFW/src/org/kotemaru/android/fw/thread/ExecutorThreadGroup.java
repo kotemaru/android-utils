@@ -5,6 +5,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 複数スレッド用Executorの実装。
+ *
+ */
 public class ExecutorThreadGroup implements Executor {
 	private final String mName;
 	private final ThreadFactory mThreadFactory;
@@ -32,6 +36,7 @@ public class ExecutorThreadGroup implements Executor {
 	//	mThreadPool.setMaximumPoolSize(size);
 	//}
 
+	@Override
 	public boolean post(Runnable runner, int delay) {
 		try {
 			if (delay == 0) {
@@ -43,6 +48,11 @@ public class ExecutorThreadGroup implements Executor {
 		} catch (RejectedExecutionException e) {
 			return false;
 		}
+	}
+
+	@Override
+	public void shutdown() {
+		mThreadPool.shutdown();
 	}
 
 }
