@@ -62,7 +62,7 @@ public abstract class ApBase extends AbstractProcessor {
 		this.environment = env;
 
 		String path = env.getOptions().get("template.path");
-		log("path="+path);
+		//log("path="+path);
 		if (path != null) {
 			Velocity.setProperty("resource.loader", "file");
 			Velocity.setProperty("file.resource.loader.class", FileResourceLoader.class.getName());
@@ -102,7 +102,7 @@ public abstract class ApBase extends AbstractProcessor {
 			Set<? extends TypeElement> annotations,
 			RoundEnvironment roundEnv
 			) {
-		log(annotations.toString());
+		//log(annotations.toString());
 
 		List<TypeElement> list = new ArrayList<TypeElement>();
 		for (TypeElement anno : annotations) {
